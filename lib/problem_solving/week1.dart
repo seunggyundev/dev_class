@@ -55,6 +55,9 @@ class BasicProblem {
 
   // 문제 3 : 이미지 추가하기
   // Image 위젯을 사용하여 네트워크에서 이미지를 불러와 화면에 표시하세요. 이미지는 임의로 선택할 수 있습니다.
+  // 이미지 캐시처리 패키지 : cached_network_image
+  // 이미지 미리 로드함수 : precacheImage, precacheImage(NetworkImage("https://example.com/sample_image.jpg"), context);
+
   Widget imageWidget() {
     return Center(
       child: Image.network('https://flexible.img.hani.co.kr/flexible/normal/960/960/imgdb/resize/2019/0121/00501111_20190121.JPG'), // 원하는 이미지 URL
@@ -311,4 +314,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
+  // 메모리 효율성을 높이기 위한 방법
+// 1. 캐시 처리 (Caching)
+// Flutter에서는 cached_network_image 패키지를 사용하여 이미지를 캐싱할 수 있습니다. 이를 통해 네트워크 이미지가 처음 로드된 후, 로컬 캐시에 저장되어 이후 다시 불러올 때 네트워크 요청을 줄일 수 있습니다.
+// # pubspec.yaml에 패키지 추가
+// dependencies:
+//   cached_network_image: ^3.2.1
+// 캐시를 사용하는 코드 예제:
+// import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:flutter/material.dart';
+//
+// class CachedImageExample extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return CachedNetworkImage(
+//       imageUrl: "https://example.com/sample_image.jpg",
+//       placeholder: (context, url) => CircularProgressIndicator(), // 로딩 표시
+//       errorWidget: (context, url, error) => Icon(Icons.error),  // 오류 이미지
+//     );
+//   }
+// }
+// 장점:
+// 속도: 이미지를 다시 요청하지 않고 로컬 캐시에서 불러오기 때문에, 로드 속도가 빨라집니다.
+// 네트워크 사용 감소: 네트워크 요청을 줄여 앱의 네트워크 사용량을 줄이고 데이터 소모를 절약할 수 있습니다.
+// 단점:
+// 캐시 용량: 로컬 캐시에 저장된 이미지가 많아질수록 앱이 사용하는 디스크 용량이 늘어날 수 있습니다.
+// 캐시 관리: cached_network_image 패키지는 기본적으로 캐시 관리 기능을 제공하지만, 특정 조건에서 직접 캐시를 지워야 할 수 있습니다.
+//
+// 미리 로드 (Pre-caching)
+// Flutter에서는 precacheImage() 함수를 사용하여 필요한 이미지를 미리 로드할 수 있습니다. 이 방법은 메모리 절약보다는 성능 개선에 더 가깝지만, 사용자가 이미지를 즉시 볼 수 있어 UI 반응성을 높입니다.
+// void preloadImage(BuildContext context) {
+//   precacheImage(NetworkImage("https://example.com/sample_image.jpg"), context);
+// }
 }

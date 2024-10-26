@@ -1,4 +1,6 @@
 import 'package:devjang_class/models.dart';
+import 'package:devjang_class/problem_solving/week1.dart';
+import 'package:devjang_class/problem_solving/week2.dart';
 import 'package:devjang_class/week2/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: DrawerExample(),
     );
   }
 }
@@ -59,6 +61,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimationExample();
+    return Container();
   }
 }

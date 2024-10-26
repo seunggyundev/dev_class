@@ -117,12 +117,12 @@ class Widgets {
 
 }
 
-class AnimationExample extends StatefulWidget {
+class DrawerExample extends StatefulWidget {
   @override
-  _AnimationExampleState createState() => _AnimationExampleState();
+  _DrawerExampleState createState() => _DrawerExampleState();
 }
 
-class _AnimationExampleState extends State<AnimationExample> with SingleTickerProviderStateMixin {
+class _DrawerExampleState extends State<DrawerExample> with SingleTickerProviderStateMixin {
   AnimationController? _controller;
   Animation<Offset>? _animation;
   int _tabIndex = 0;
@@ -291,9 +291,11 @@ class _AnimationExampleState extends State<AnimationExample> with SingleTickerPr
             ),
             ListTile(
               leading: Icon(Icons.home),
-              title: Text('홈'),
+              title: Text('쇼핑화면으로 이동'),
               onTap: () {
                 Navigator.pop(context);  // Drawer 닫기
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ShoppingListScreen()));
+
                 // 홈 화면으로 이동하는 로직을 추가할 수 있습니다.
               },
             ),

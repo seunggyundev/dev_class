@@ -101,22 +101,32 @@ class CupertinoExample extends StatelessWidget {
 //  애니메이션 적용하기
 //
 // Flutter에서 애니메이션을 사용하여, 버튼을 클릭하면 텍스트가 왼쪽에서 오른쪽으로 이동하는 애니메이션을 구현하세요.
-class AnimationExample extends StatefulWidget {
+class AnimationExampleText extends StatefulWidget {
   @override
-  _AnimationExampleState createState() => _AnimationExampleState();
+  _AnimationExampleTextState createState() => _AnimationExampleTextState();
 }
 
-class _AnimationExampleState extends State<AnimationExample> with SingleTickerProviderStateMixin {
+class _AnimationExampleTextState extends State<AnimationExampleText> with SingleTickerProviderStateMixin {
   AnimationController? _controller;
   Animation<Offset>? _animation;
 
   @override
   void initState() {
     super.initState();
+    // AnimationController: 애니메이션을 시작하거나 중지하고, 재생 속도를 조절하는 역할을 합니다.
+    // duration: 애니메이션의 길이(시간)를 설정합니다. 여기서는 2초 동안 애니메이션이 실행됩니다.
+    // vsync: 애니메이션이 화면 주사율에 맞춰 실행되도록 도와줍니다. 성능을 최적화하는 데 유용하며, SingleTickerProviderStateMixin을 사용해 설정합니다.
     _controller = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
     );
+    // Tween: 시작 위치(begin)와 끝 위치(end)를 지정해 애니메이션이 어디에서 어디로 이동할지 설정합니다. 여기서는 텍스트가 (-1, 0)에서 시작해 (1, 0)으로 이동합니다.
+    // Offset(-1, 0): 화면의 왼쪽 바깥쪽에서 시작.
+    // Offset(1, 0): 화면 오른쪽 바깥쪽으로 이동.
+    // .animate(_controller!): Tween과 AnimationControll
+    // Offset은 화면의 특정 위치를 X축과 Y축 좌표로 표현하는 방식이다.
+    // X축(Offset(x,0)) - -1.0 : 화면의 왼쪽 바깥에서 시작, 0.0 : 중앙, 1.0 : 화면의 오른쪽 바깥에서 시작
+    // Y축 - -1.0 : 화면의 위쪽 바깥 영역, 0.0 중앙, 1.0 : 아랫쪽
     _animation = Tween<Offset>(
       begin: Offset(-1, 0),
       end: Offset(1, 0),
@@ -139,13 +149,32 @@ class _AnimationExampleState extends State<AnimationExample> with SingleTickerPr
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // SlideTransition: SlideTransition은 position을 통해 텍스트의 위치를 설정하고, 이 위치는 Tween에서 지정한 위치로 애니메이션됩니다.
+            // position: _animation!: 애니메이션이 설정된 _animation의 위치에 따라 텍스트가 이동합니다.
+            // child: 애니메이션이 적용될 위젯으로, 여기서는 '움직이는 텍스트'가 이동합니다.
             SlideTransition(
               position: _animation!,
-              child: Text('움직이는 텍스트'),
+              child: Container(
+                padding: EdgeInsets.all(16),
+                color: Colors.red,
+                child: Text("움직이는 텍스트",
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                ),),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
-                _controller!.forward(); // 애니메이션 시작
+                // 페이지 이동 예시
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ShoppingListScreen()));
+
+                // var status = _controller?.status;
+                // if (status == AnimationStatus.completed) {
+                //   _controller!.reverse();  // 끝에 도달하기
+                // } else if (status == AnimationStatus.dismissed) {
+                //   _controller!.forward();  // 시작점으로 돌아가기
+                // }
               },
               child: Text('애니메이션 시작'),
             ),
@@ -178,6 +207,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
   List<Map<String, dynamic>> shoppingList = [];
 
   double get totalPrice {
+    // 축약적으로 합치는걸 표현할 수 있구나~~
     return shoppingList.fold(0, (sum, item) => sum + item['price']);
   }
 
@@ -185,7 +215,11 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('쇼핑 리스트'),
+        title: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Text('쇼핑 리스트')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -211,7 +245,10 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                   ),
                   SizedBox(height: 16.0),
                   TextFormField(
-                    decoration: InputDecoration(labelText: '가격'),
+                    decoration: InputDecoration(
+                        labelText: '가격',
+                      errorStyle: TextStyle(color: Colors.blue), // validator가 리턴한 텍스트의 스타일 지정
+                    ),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       setState(() {
