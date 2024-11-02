@@ -1,11 +1,22 @@
 import 'package:devjang_class/models.dart';
 import 'package:devjang_class/problem_solving/week1.dart';
 import 'package:devjang_class/problem_solving/week2.dart';
+import 'package:devjang_class/problem_solving/week3.dart';
 import 'package:devjang_class/week2/widgets.dart';
+import 'package:devjang_class/week3/provider_example.dart';
+import 'package:devjang_class/week3/reponsive_example.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (BuildContext context) => NameProvider()),
+        ],
+        child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -21,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: DrawerExample(),
+      home: NameStless(),
     );
   }
 }
@@ -61,6 +72,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CustomCard(title: 'title', description: 'description', color: Colors.blueGrey,),
+              CustomCard(title: 'title', description: 'description', color: Colors.blue,),
+              CustomCard(title: 'title', description: 'description', color: Colors.green,),
+              CustomInputField(hintText: 'id를 입력해주세요', errorText: '오루발생', icon: Icons.access_alarm,),
+
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
